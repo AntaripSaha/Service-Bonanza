@@ -97,7 +97,7 @@ class PublicController extends Controller
         }
     }
 
-    public function register($name)
+    public function register(Request $request, $name)
     {
         $location = Location::All();
         if ($name == "freelancer") {
@@ -121,6 +121,7 @@ class PublicController extends Controller
      */
     public function registerStep1Validation(Request $request)
     {
+
         $this->validate(
             $request,
             [
@@ -143,6 +144,7 @@ class PublicController extends Controller
      */
     public function registerStep2Validation(Request $request)
     {
+
         $this->validate(
             $request,
             [
@@ -165,6 +167,7 @@ class PublicController extends Controller
      */
     public function singleFormValidation(Request $request)
     {
+
         $this->validate(
             $request,
             [
@@ -172,7 +175,7 @@ class PublicController extends Controller
                 'last_name' => 'required',
                 'email' => 'required|email|unique:users',
                 'phone' => 'required|unique:users,phone',
-                'password' => 'required|string|min:6|confirmed',
+                'password' => 'required|string|min:10|confirmed',
                 'password_confirmation' => 'required',
                 'termsconditions' => 'required',
                 'role' => 'not_in:admin',
@@ -872,7 +875,7 @@ class PublicController extends Controller
                     );
                 }
             } else {
-                
+
                 $min_price = !empty($_GET['minprice']) ? $_GET['minprice'] : 0;
                 $max_price = !empty($_GET['maxprice']) ? $_GET['maxprice'] : 0;
                 $Jobs_total_records = Job::count();
@@ -1154,7 +1157,7 @@ class PublicController extends Controller
 
         if ($user) {
 
-            if( $user->user_verified == 1 ){
+            if ($user->user_verified == 1) {
                 if (auth('web')->attempt(['email' => $user->email, 'password' => $request->password], 200)) {
 
                     if (Auth::user()->getRoleNames()[0] == 'freelancer') {
@@ -1170,51 +1173,48 @@ class PublicController extends Controller
                 } else {
                     return redirect()->back()->with('error', 'UserName or Password Dose not Matched');
                 }
-            }
-            else{
+            } else {
 
-                if( $user->getRoleNames()[0] == 'freelancer' ){
-                    $rand = rand(000000,999999);
-                
-                    if( strlen($rand) < 6 ){
-                        $rand = rand(000000,999999);
+                if ($user->getRoleNames()[0] == 'freelancer') {
+                    $rand = rand(000000, 999999);
+
+                    if (strlen($rand) < 6) {
+                        $rand = rand(000000, 999999);
                     }
-    
+
                     $url = 'http://isms.zaman-it.com/smsapimany';
-    
+
                     $data = [
-                                'api_key' => env('api_key'),
-                                'senderid' => env('senderid'),
-                                'messages' => json_encode([
-                                [
-                                    'to' => '88'.$user->phone,
-                                    'message' => "<#> Your One Time Password is : $rand",
-                                ],
-                                ]),
-                            ];
+                        'api_key' => env('api_key'),
+                        'senderid' => env('senderid'),
+                        'messages' => json_encode([
+                            [
+                                'to' => '88' . $user->phone,
+                                'message' => "<#> Your One Time Password is : $rand",
+                            ],
+                        ]),
+                    ];
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_POST, 1);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            
+
                     $response = curl_exec($ch);
                     curl_close($ch);
-    
+
                     $verification = new Verification();
                     $verification->phone = $user->phone;
                     $verification->code = $rand;
-    
-                    if( $verification->save() ){
+
+                    if ($verification->save()) {
                         $phone = $user->phone;
                         $role = $request->role;
-                        return view("auth.otp",compact("rand","phone",'role'));
+                        return view("auth.otp", compact("rand", "phone", 'role'));
                     }
                 }
             }
-
-            
         } else {
             return back();
         }
@@ -1223,7 +1223,9 @@ class PublicController extends Controller
 
 
     //do register function start
-    public function do_register(Request $request){
+    public function do_register(Request $request)
+    {
+
 
         $request->validate([
             'first_name' => 'required',
@@ -1231,35 +1233,34 @@ class PublicController extends Controller
             'email' => 'required|unique:users,email',
             'phone' => 'required|unique:users,phone',
             'locations' => 'required',
+            'termsconditions' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
 
         $user = new User();
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $name = $user->first_name .'-'. $user->last_name;
+        $name = $user->first_name . '-' . $user->last_name;
         $user->slug = Str::slug($name);
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->password = FacadesHash::make($request->password);
 
-        if( $request->role == 'freelancer' ){
+        if ($request->role == 'freelancer') {
             $user->user_verified = 0;
-        }
-        else{
+        } else {
             $user->user_verified = 1;
         }
         $user->is_disabled = 'false';
 
-        if( $user->save() ){
-            if( $request->role == 'freelancer' ){
+        if ($user->save()) {
+            if ($request->role == 'freelancer') {
                 $model_has_role = new ModelHasRole();
                 $model_has_role->role_id = 3;
                 $model_has_role->model_type = 'App\User';
                 $model_has_role->model_id = $user->id;
                 $model_has_role->save();
-            }
-            else{
+            } else {
                 $model_has_role = new ModelHasRole();
                 $model_has_role->role_id = 2;
                 $model_has_role->model_type = 'App\User';
@@ -1269,35 +1270,35 @@ class PublicController extends Controller
 
             $profile = new Profile();
             $profile->user_id = $user->id;
-            if( $profile->save() ){
+            if ($profile->save()) {
 
-                if( $request->role == 'freelancer' ){
+                if ($request->role == 'freelancer') {
 
-                    $rand = rand(000000,999999);
-                
-                    if( strlen($rand) < 6 ){
-                        $rand = rand(000000,999999);
+                    $rand = rand(000000, 999999);
+
+                    if (strlen($rand) < 6) {
+                        $rand = rand(000000, 999999);
                     }
 
                     $url = 'http://isms.zaman-it.com/smsapimany';
 
                     $data = [
-                                'api_key' => env('api_key'),
-                                'senderid' => env('senderid'),
-                                'messages' => json_encode([
-                                [
-                                    'to' => '88'.$user->phone,
-                                    'message' => "<#> Your One Time Password is : $rand",
-                                ],
-                                ]),
-                            ];
+                        'api_key' => env('api_key'),
+                        'senderid' => env('senderid'),
+                        'messages' => json_encode([
+                            [
+                                'to' => '88' . $user->phone,
+                                'message' => "<#> Your One Time Password is : $rand",
+                            ],
+                        ]),
+                    ];
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
                     curl_setopt($ch, CURLOPT_POST, 1);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            
+
                     $response = curl_exec($ch);
                     curl_close($ch);
 
@@ -1305,14 +1306,12 @@ class PublicController extends Controller
                     $verification->phone = $user->phone;
                     $verification->code = $rand;
 
-                    if( $verification->save() ){
+                    if ($verification->save()) {
                         $phone = $user->phone;
                         $role = $request->role;
-                        return view("auth.otp",compact("rand","phone",'role'));
+                        return view("auth.otp", compact("rand", "phone", 'role'));
                     }
-
-                }
-                else{
+                } else {
                     if (auth('web')->attempt(['email' => $user->email, 'password' => $request->password], 200)) {
 
                         $invoice = new Invoice();
@@ -1334,7 +1333,7 @@ class PublicController extends Controller
                         $invoice->paypal_fee = 0;
                         $invoice->paid = true;
                         $invoice->type = "package";
-        
+
                         if ($invoice->save()) {
                             $invoice_id = $invoice->id;
                             $item = new Item();
@@ -1345,16 +1344,16 @@ class PublicController extends Controller
                             $item->item_price = 0;
                             $item->item_qty = 1;
                             $item->save();
-    
+
                             $order = new Order();
                             $order->user_id = Auth::user()->id;
                             $order->product_id = 1;
                             $order->invoice_id = $invoice->id;
                             $order->status = 'completed';
                             $order->type = $invoice->type;
-    
+
                             if ($order->save()) {
-    
+
                                 $package_transaction = new PackageTransaction();
                                 $package_transaction->user_id = Auth::user()->id;
                                 $package_transaction->item_id = $item->id;
@@ -1363,7 +1362,7 @@ class PublicController extends Controller
                                 $package_transaction->transaction_id = Str::random(10);
                                 $package_transaction->is_verified = true;
                                 $package_transaction->type = "Bkash";
-    
+
                                 if ($package_transaction->save()) {
                                     return redirect()->route('employerDashboard');
                                 } else {
@@ -1378,38 +1377,33 @@ class PublicController extends Controller
                         return redirect()->back()->with('error', 'UserName or Password Dose not Matched');
                     }
                 }
-
-                
-            }
-            else{
+            } else {
                 return redirect()->back()->with('error', 'Something went wrong');
             }
-
-            
         }
-
     }
     //do register function end
 
 
 
     //OTP Verify start
-    public function otp_verify($phone,Request $request){
-        
-        $verification = Verification::where("code",$request->code)->first();
-        $role = $request->role;
-        
-        if( $verification ){
-            $user = User::where("phone",$verification->phone)->first();
+    public function otp_verify($phone, Request $request)
+    {
 
-            if( $user ){
+        $verification = Verification::where("code", $request->code)->first();
+        $role = $request->role;
+
+        if ($verification) {
+            $user = User::where("phone", $verification->phone)->first();
+
+            if ($user) {
 
                 $user->user_verified = 1;
-                if( $user->save() ){
+                if ($user->save()) {
                     Auth::login($user);
-                    
+
                     $verification->delete();
-                    
+
                     $invoice = new Invoice();
                     $invoice->title = 'Invoice';
                     $invoice->price = 0;
@@ -1429,7 +1423,7 @@ class PublicController extends Controller
                     $invoice->paypal_fee = 0;
                     $invoice->paid = true;
                     $invoice->type = "package";
-    
+
                     if ($invoice->save()) {
                         $invoice_id = $invoice->id;
                         $item = new Item();
@@ -1468,22 +1462,14 @@ class PublicController extends Controller
                             return back();
                         }
                     }
-
-                    
-                    
                 }
+            } else {
+                return redirect()->route('user.register', $role)->with("error", "No User Found");
             }
-            else{
-                return redirect()->route('user.register',$role)->with("error","No User Found");
-            }
-        }
-        else{
+        } else {
             $rand = $request->code;
-            return view("auth.otp",compact("rand","phone",'role'));
+            return view("auth.otp", compact("rand", "phone", 'role'));
         }
-        
-        
-
     }
     //OTP Verify end
 

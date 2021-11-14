@@ -73,8 +73,7 @@
                                           </ul>
                                       </div>
                                       @endif
-                                      <form method="POST" class="wt-formtheme wt-formregister"
-                                          action="{{ route('do.register') }}">
+                                      <form method="POST" class="wt-formtheme wt-formregister" action="{{ route('do.register') }}">
                                           @csrf
                                           <fieldset class="wt-registerformgroup">
                                               <div class="wt-haslayout" v-if="step === 1" v-cloak>
@@ -89,10 +88,7 @@
 
                                                   <!-- first name -->
                                                   <div class="form-group form-group-half">
-                                                      <input type="text" name="first_name" class="form-control"
-                                                          placeholder="{{{ trans('lang.ph_first_name') }}}"
-                                                          v-bind:class="{ 'is-invalid': form_step1.is_first_name_error }"
-                                                          v-model="first_name">
+                                                      <input type="text" name="first_name" class="form-control" placeholder="{{{ trans('lang.ph_first_name') }}}" v-bind:class="{ 'is-invalid': form_step1.is_first_name_error }" v-model="first_name">
                                                       <span class="help-block" v-if="form_step1.first_name_error">
                                                           <strong v-cloak>@{{form_step1.first_name_error}}</strong>
                                                       </span>
@@ -100,10 +96,7 @@
 
                                                   <!-- last name -->
                                                   <div class="form-group form-group-half">
-                                                      <input type="text" name="last_name" class="form-control"
-                                                          placeholder="{{{ trans('lang.ph_last_name') }}}"
-                                                          v-bind:class="{ 'is-invalid': form_step1.is_last_name_error }"
-                                                          v-model="last_name">
+                                                      <input type="text" name="last_name" class="form-control" placeholder="{{{ trans('lang.ph_last_name') }}}" v-bind:class="{ 'is-invalid': form_step1.is_last_name_error }" v-model="last_name">
                                                       <span class="help-block" v-if="form_step1.last_name_error">
                                                           <strong v-cloak>@{{form_step1.last_name_error}}</strong>
                                                       </span>
@@ -111,11 +104,7 @@
 
                                                   <!-- email -->
                                                   <div class="form-group">
-                                                      <input id="user_email" type="email" class="form-control"
-                                                          name="email" placeholder="{{{ trans('lang.ph_email') }}}"
-                                                          value="{{ old('email') }}"
-                                                          v-bind:class="{ 'is-invalid': form_step1.is_email_error }"
-                                                          v-model="user_email">
+                                                      <input id="user_email" type="email" class="form-control" name="email" placeholder="{{{ trans('lang.ph_email') }}}" value="{{ old('email') }}" v-bind:class="{ 'is-invalid': form_step1.is_email_error }" v-model="user_email">
                                                       <span class="help-block" v-if="form_step1.email_error">
                                                           <strong v-cloak>@{{form_step1.email_error}}</strong>
                                                       </span>
@@ -123,8 +112,7 @@
 
                                                   <!-- phone -->
                                                   <div class="form-group">
-                                                      <input type="text" name="phone" class="form-control"
-                                                          placeholder="01*********">
+                                                      <input type="text" name="phone" class="form-control" placeholder="01*********">
                                                       <span class="help-block" v-if="form_step1.phone_error">
                                                           <strong v-cloak>@{{form_step1.phone_error}}</strong>
                                                       </span>
@@ -138,8 +126,7 @@
                                               @if (!empty($locations))
                                               <div class="form-group">
                                                   <span class="wt-select">
-                                                      <select name="locations" class="form-select"
-                                                          aria-label="Default select example">
+                                                      <select name="locations" class="form-select" aria-label="Default select example">
                                                           <option selected>Select Location</option>
                                                           @foreach ($location as $location){
                                                           <option value="{{$location->id}}">{{$location->title}}
@@ -154,23 +141,17 @@
                                               </div>
                                               @endif
                                               <div class="form-group form-group-half">
-                                                  <input id="password" type="password" class="form-control"
-                                                      name="password" placeholder="{{{ trans('lang.ph_pass') }}}"
-                                                      v-bind:class="{ 'is-invalid': form_step2.is_password_error }">
+                                                  <input id="password" type="password" class="form-control" name="password" placeholder="{{{ trans('lang.ph_pass') }}}" v-bind:class="{ 'is-invalid': form_step2.is_password_error }">
                                                   <span class="help-block" v-if="form_step2.password_error">
                                                       <strong v-cloak>@{{form_step2.password_error}}</strong>
                                                   </span>
                                               </div>
                                               <div class="form-group form-group-half">
-                                                  <input id="password-confirm" type="password" class="form-control"
-                                                      name="password_confirmation"
-                                                      placeholder="{{{ trans('lang.ph_retry_pass') }}}"
-                                                      v-bind:class="{ 'is-invalid': form_step2.is_password_confirm_error }">
+                                                  <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="{{{ trans('lang.ph_retry_pass') }}}" v-bind:class="{ 'is-invalid': form_step2.is_password_confirm_error }">
                                                   <span class="help-block" v-if="form_step2.password_confirm_error">
                                                       <strong v-cloak>@{{form_step2.password_confirm_error}}</strong>
                                                   </span>
-                                                  <input type="hidden" value="{{ request()->route('name') }}"
-                                                      name="role">
+                                                  <input type="hidden" value="{{ request()->route('name') }}" name="role">
                                               </div>
                                           </fieldset>
                                           <!-- <fieldset class="wt-formregisterstart" style="datahidde=true">
@@ -205,17 +186,13 @@
                                           <fieldset class="wt-termsconditions">
                                               <div class="wt-checkboxholder">
                                                   <span class="wt-checkbox">
-                                                      <input id="termsconditions" type="checkbox" name="termsconditions"
-                                                          checked="">
-                                                      <label
-                                                          for="termsconditions"><span>{{{ $term_note }}}</span></label>
+                                                      <input id="termsconditions" type="checkbox" name="termsconditions" checked="">
+                                                      <label for="termsconditions"><span>{{{ $term_note }}}</span></label>
                                                       <span class="help-block" v-if="form_step2.termsconditions_error">
-                                                          <strong style="color: red;"
-                                                              v-cloak>{{trans('lang.register_termsconditions_error')}}</strong>
+                                                          <strong style="color: red;" v-cloak>{{trans('lang.register_termsconditions_error')}}</strong>
                                                       </span>
                                                   </span>
-                                                  <button type="submit"
-                                                      class="wt-btn">{{{ trans('lang.submit') }}}</button>
+                                                  <button type="submit" class="wt-btn">{{{ trans('lang.submit') }}}</button>
                                               </div>
                                           </fieldset>
                                           {{-- </div> --}}
@@ -223,8 +200,7 @@
                                   </div>
                               </div>
                               <div class="wt-registerformfooter">
-                                  <span>{{{ trans('lang.have_account') }}}<a id="wt-lg" href="javascript:void(0);"
-                                          @click.prevent='scrollTop()'>{{{ trans('lang.btn_login_now') }}}</a></span>
+                                  <span>{{{ trans('lang.have_account') }}}<a id="wt-lg" href="javascript:void(0);" @click.prevent='scrollTop()'>{{{ trans('lang.btn_login_now') }}}</a></span>
                               </div>
                           </div>
                       </div>
