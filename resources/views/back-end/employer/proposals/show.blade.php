@@ -56,7 +56,7 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                     <div class="wt-freelancerholder wt-tabsinfo">
                         <div class="wt-jobdetailscontent">
                             <div class="wt-userlistinghold wt-featured wt-userlistingvtwo">
-                                @if (!empty($job->is_featured) && $job->is_featured === 'true')
+                                @if (!empty($job->is_featured) && $job->is_featured == 'true')
                                 <span class="wt-featuredtag"><img src="{{{ asset('images/featured.png') }}}" alt="{{ trans('lang.is_featured') }}" data-tipso="Plus Member" class="template-content tipso_style"></span>
                                 @endif
                                 <div class="wt-userlistingcontent">
@@ -64,7 +64,7 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                                         @if (!empty($employer_name) || !empty($job->title) )
                                         <div class="wt-title">
                                             @if (!empty($employer_name))
-                                            <a href="{{{ url('profile/'.$job->employer->slug) }}}">@if ($verified_user === 1)<i class="fa fa-check-circle"></i>@endif&nbsp;{{{ $employer_name }}}</a>
+                                            <a href="{{{ url('profile/'.$job->employer->slug) }}}">@if ($verified_user == 1)<i class="fa fa-check-circle"></i>@endif&nbsp;{{{ $employer_name }}}</a>
                                             @endif
                                             @if (!empty($job->title))
                                             <h2>{{{ $job->title }}}</h2>
@@ -90,7 +90,7 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                                         @endif
                                     </div>
                                     <div class="wt-rightarea">
-                                        @if ($job->status === 'hired')
+                                        @if ($job->status == 'hired')
                                         <div class="wt-hireduserstatus">
                                             <h4>{{ trans('lang.hired') }}</h4>
                                             <span>{{{ $freelancer_name }}}</span>
@@ -100,7 +100,7 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                                                 </li>
                                             </ul>
                                         </div>
-                                        @elseif ($job->status === 'completed')
+                                        @elseif ($job->status == 'completed')
                                         <div class="wt-hireduserstatus">
                                             <h4>{{ trans('lang.completed') }}</h4>
                                             <span>{{{ $freelancer_name }}}</span>
@@ -134,8 +134,8 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                             @forelse($job_transactions as $job_transaction)
                             <div class="wt-userlistinghold wt-featured wt-proposalitem ">
 
-                                @if((Auth::user()->getRoleNames()[0]) == 'admin')
-                                @if(($job_transaction->is_verified) === 0)
+                                @if(Auth::user()->getRoleNames()[0] == 'admin')
+                                @if($job_transaction->is_verified == 0)
                                 <form method="post" action="{{route('payment.approve', $job_transaction->id)}}">
                                     @csrf
                                     <div class="wt-rightarea la-pending-jobs  float-right">
@@ -158,8 +158,8 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                                 @endif
 
 
-                                @if((Auth::user()->getRoleNames()[0]) == 'employer')
-                                @if(($job_transaction->is_verified) === 0)
+                                @if(Auth::user()->getRoleNames()[0] == 'employer')
+                                @if($job_transaction->is_verified == 0)
                                 <div class="wt-rightarea la-pending-jobs  float-right">
                                     <div class="wt-btnarea  float-right">
                                         <button class="wt-btn " style="background-color: rgba(247, 54, 74);">
@@ -227,11 +227,11 @@ $project_type = Helper::getProjectTypeList($job->project_type);
 
                             <!-- Button for pay all Amount Admin -->
 
-                            @if($job->service_type === 'Online')
+                            @if($job->service_type == 'Online')
 
-                            @if ( $job->status === 'completed' && Auth::user()->getRoleNames()->first() == 'admin')
+                            @if ( $job->status == 'completed' && Auth::user()->getRoleNames()->first() == 'admin')
 
-                            @if($payment_status && $payment_status->status === 'completed')
+                            @if($payment_status && $payment_status->status == 'completed')
 
                             <div class="wt-rightarea la-pending-jobs  float-right">
                                 <div class="wt-btnarea  float-right">
@@ -355,7 +355,7 @@ $project_type = Helper::getProjectTypeList($job->project_type);
                                 <div class="wt-rightarea wt-titlewithsearch">
 
 
-                                    @if ($job->status === 'hired' && Auth::user()->getRoleNames()->first() == 'employer')
+                                    @if ($job->status == 'hired' && Auth::user()->getRoleNames()->first() == 'employer')
 
                                     @if( $job->service_type == 'Online' )
                                     @if( $verified >= 2 )

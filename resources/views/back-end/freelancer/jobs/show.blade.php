@@ -86,8 +86,8 @@ $verified_user = \App\User::select('user_verified')
                             <div class="wt-jobdetailscontent">
                                 @forelse($job_transactions as $job_transaction)
                                 <div class="wt-userlistinghold wt-featured wt-proposalitem">
-                                    @if((Auth::user()->getRoleNames()[0]) == 'freelancer')
-                                            @if(($job_transaction->is_verified) === 0)
+                                    @if(Auth::user()->getRoleNames()[0] == 'freelancer')
+                                            @if( $job_transaction->is_verified == 0)
                                             <div class="wt-rightarea la-pending-jobs  float-right">
                                                 <div class="wt-btnarea  float-right">
                                                     <button class="wt-btn " style="background-color: rgba(247, 54, 74);">
